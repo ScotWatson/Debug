@@ -18,7 +18,7 @@ export function resetLog() {
 export function recoveredFrom(error) {
   try {
     if (currentLog !== null) {
-      currentLog.logRecovery(error);
+      currentLog.recovery(error);
     } else {
       self?.console?.warn?.(error);
     }
@@ -33,15 +33,12 @@ export function recoveredFrom(error) {
 export function finalCatch(error) {
   try {
     if (currentLog !== null) {
-      currentLog.logRecovery(error);
+      currentLog.error(error);
     } else {
       self?.console?.error?.(error);
     }
   } catch (e) {
-    rethrow({
-      functionName: "finalCatch",
-      error: e,
-    });
+    // As this is the final catch, any error cannot be rethrown, so it is discarded.
   }
 }
 
