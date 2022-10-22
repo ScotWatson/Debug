@@ -7,7 +7,7 @@ import * as Types from "https://scotwatson.github.io/Debug/Types.mjs";
 
 let currentLog = new Log();
 
-export getLog() {
+export function getLog() {
   return currentLog;
 }
 
@@ -23,7 +23,7 @@ export function recoveredFrom(error) {
       self?.console?.warn?.(error);
     }
   } catch (e) {
-    bubble({
+    rethrow({
       functionName: "recoveredFrom",
       error: e,
     });
@@ -38,16 +38,18 @@ export function finalCatch(error) {
       self?.console?.error?.(error);
     }
   } catch (e) {
-    bubble({
+    rethrow({
       functionName: "finalCatch",
       error: e,
     });
   }
 }
 
-export function bubble(args) {
+export function rethrow(args) {
   if (!(Types.isSimpleObject(args))) {
     throw new Exception({
+      functionName: "rethrow",
+      description: "Attempt to call rethrow with invalid arguments.",
     });
   }
   let functionName = "";
@@ -63,34 +65,33 @@ export function bubble(args) {
     });
   }
   if (Types.isSimpleObject(args.error)) {
-    // This is an complex error generated from the calling function.
     throw new Exception({
       functionName: functionName,
+      description: "Note: error information provided as an object.",
       info: args.error,
     });
   } else if (Types.isString(args.error)) {
-    // This is an simple error generated from the calling function.
     throw new Exception({
       functionName: functionName,
       description: args.error,
     });
   } else if (args.error instanceof Exception) {
-    // This is an error from further down the call stack.
     throw new Exception({
       functionName: functionName,
+      description: "Unanticipated rethrown error.",
       cause: args.error,
     });
   } else if (args.error instanceof Error) {
-    // This is an error from the JavaScript language itself or a third-party API.
     throw new Exception({
       functionName: functionName,
+      description: "Unanticipated JavaScript Error.",
       info: args.error,
     });
   } else {
     // This should never occur.
     throw new Exception({
       functionName: functionName,
-      description: "Unrecognized object type passed to error bubbler. Indicates internal logic error.",
+      description: "Unrecognized error type passed to rethrow. Indicates internal logic error.",
       info: args.error,
     });
   }
@@ -144,7 +145,7 @@ export class Exception {
         this.#cause = null;
       }
     } catch (e) {
-      bubble({
+      rethrow({
         functionName: "Exception constructor",
         error: e,
       });
@@ -189,7 +190,7 @@ export class Log {
         this.#rollingLog.unshift(this.#rollingLogSegment);
       }
     } catch (e) {
-      bubble({
+      rethrow({
         functionName: "Log constructor",
         error: e,
       });
@@ -217,7 +218,7 @@ export class Log {
         message: message,
       });
     } catch (e) {
-      bubble({
+      rethrow({
         functionName: "Log.debug",
         error: e,
       });
@@ -245,7 +246,7 @@ export class Log {
         message: message,
       });
     } catch (e) {
-      bubble({
+      rethrow({
         functionName: "Log.warning",
         error: e,
       });
@@ -278,7 +279,7 @@ export class Log {
         message: message,
       });
     } catch (e) {
-      bubble({
+      rethrow({
         functionName: "Log.recovery",
         error: e,
       });
@@ -312,7 +313,7 @@ export class Log {
       });
       this.#frozenLogs.push(this.#rollingLog.flat());
     } catch (e) {
-      bubble({
+      rethrow({
         functionName: "Log.error",
         error: e,
       });
