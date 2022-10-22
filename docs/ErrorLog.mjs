@@ -58,7 +58,7 @@ export function rethrow(args) {
   if (!(Object.hasOwn(args, "error"))) {
     throw new Exception({
       functionName: functionName,
-      description: args.error,
+      description: "Note: error information is not provided",
     });
   }
   if (Types.isSimpleObject(args.error)) {
