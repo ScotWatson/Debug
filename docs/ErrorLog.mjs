@@ -5,95 +5,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 import * as Types from "https://scotwatson.github.io/Debug/Types.mjs";
 
-let currentLog = new Log();
-
-export function getLog() {
-  return currentLog;
-}
-
-export function resetLog() {
-  currentLog = new Log();
-}
-
-export function recoveredFrom(error) {
-  try {
-    if (currentLog !== null) {
-      currentLog.recovery(error);
-    } else {
-      self?.console?.warn?.(error);
-    }
-  } catch (e) {
-    rethrow({
-      functionName: "recoveredFrom",
-      error: e,
-    });
-  }
-}
-
-export function finalCatch(error) {
-  try {
-    if (currentLog !== null) {
-      currentLog.error(error);
-    } else {
-      self?.console?.error?.(error);
-    }
-  } catch (e) {
-    // As this is the final catch, any error cannot be rethrown, so it is discarded.
-  }
-}
-
-export function rethrow(args) {
-  if (!(Types.isSimpleObject(args))) {
-    throw new Exception({
-      functionName: "rethrow",
-      description: "Attempt to call rethrow with invalid arguments.",
-    });
-  }
-  let functionName = "";
-  if (Object.hasOwn(args, "functionName")) {
-    if (Types.isString(args.functionName)) {
-      functionName = args.functionName;
-    }
-  }
-  if (!(Object.hasOwn(args, "error"))) {
-    throw new Exception({
-      functionName: functionName,
-      description: "Note: error information is not provided",
-    });
-  }
-  if (Types.isSimpleObject(args.error)) {
-    throw new Exception({
-      functionName: functionName,
-      description: "Note: error information provided as an object.",
-      info: args.error,
-    });
-  } else if (Types.isString(args.error)) {
-    throw new Exception({
-      functionName: functionName,
-      description: args.error,
-    });
-  } else if (args.error instanceof Exception) {
-    throw new Exception({
-      functionName: functionName,
-      description: "Unanticipated rethrown error.",
-      cause: args.error,
-    });
-  } else if (args.error instanceof Error) {
-    throw new Exception({
-      functionName: functionName,
-      description: "Unanticipated JavaScript Error.",
-      info: args.error,
-    });
-  } else {
-    // This should never occur.
-    throw new Exception({
-      functionName: functionName,
-      description: "Unrecognized error type passed to rethrow. Indicates internal logic error.",
-      info: args.error,
-    });
-  }
-}
-
 export class Exception {
   #functionName;
   #description;
@@ -320,3 +231,92 @@ export class Log {
     return this.#frozenLogs;
   }
 };
+
+let currentLog = new Log();
+
+export function getLog() {
+  return currentLog;
+}
+
+export function resetLog() {
+  currentLog = new Log();
+}
+
+export function recoveredFrom(error) {
+  try {
+    if (currentLog !== null) {
+      currentLog.recovery(error);
+    } else {
+      self?.console?.warn?.(error);
+    }
+  } catch (e) {
+    rethrow({
+      functionName: "recoveredFrom",
+      error: e,
+    });
+  }
+}
+
+export function finalCatch(error) {
+  try {
+    if (currentLog !== null) {
+      currentLog.error(error);
+    } else {
+      self?.console?.error?.(error);
+    }
+  } catch (e) {
+    // As this is the final catch, any error cannot be rethrown, so it is discarded.
+  }
+}
+
+export function rethrow(args) {
+  if (!(Types.isSimpleObject(args))) {
+    throw new Exception({
+      functionName: "rethrow",
+      description: "Attempt to call rethrow with invalid arguments.",
+    });
+  }
+  let functionName = "";
+  if (Object.hasOwn(args, "functionName")) {
+    if (Types.isString(args.functionName)) {
+      functionName = args.functionName;
+    }
+  }
+  if (!(Object.hasOwn(args, "error"))) {
+    throw new Exception({
+      functionName: functionName,
+      description: "Note: error information is not provided",
+    });
+  }
+  if (Types.isSimpleObject(args.error)) {
+    throw new Exception({
+      functionName: functionName,
+      description: "Note: error information provided as an object.",
+      info: args.error,
+    });
+  } else if (Types.isString(args.error)) {
+    throw new Exception({
+      functionName: functionName,
+      description: args.error,
+    });
+  } else if (args.error instanceof Exception) {
+    throw new Exception({
+      functionName: functionName,
+      description: "Unanticipated rethrown error.",
+      cause: args.error,
+    });
+  } else if (args.error instanceof Error) {
+    throw new Exception({
+      functionName: functionName,
+      description: "Unanticipated JavaScript Error.",
+      info: args.error,
+    });
+  } else {
+    // This should never occur.
+    throw new Exception({
+      functionName: functionName,
+      description: "Unrecognized error type passed to rethrow. Indicates internal logic error.",
+      info: args.error,
+    });
+  }
+}
