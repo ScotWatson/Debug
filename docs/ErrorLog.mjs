@@ -89,8 +89,7 @@ export class Log {
         this.#rollingLog[i] = [];
       }
       rollLog();
-      console.log(self.setInterval);
-      this.#rollingLogInterval = self.setInterval(rollLog, 1000);
+      this.#rollingLogInterval = self.setInterval(rollLog.bind(this), 1000);
       this.#cumulativeLog = [];
       this.#frozenLogs = [];
       function rollLog() {
