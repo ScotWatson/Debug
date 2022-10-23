@@ -309,14 +309,18 @@ export function rethrow(args) {
     throw new Exception({
       functionName: functionName,
       description: "Unanticipated JavaScript Error.",
-      info: args.error,
+      info: {
+        JS_Error: args.error,
+      },
     });
   } else {
     // This should never occur.
     throw new Exception({
       functionName: functionName,
       description: "Unrecognized error type passed to rethrow. Indicates internal logic error.",
-      info: args.error,
+      info: {
+        rawData: args.error,
+      },
     });
   }
 }
