@@ -88,7 +88,7 @@ export class Log {
       for (let i = 0; i < 10; ++i) {
         this.#rollingLog[i] = [];
       }
-      rollLog();
+      rollLog.call(this);
       this.#rollingLogInterval = self.setInterval(rollLog.bind(this), 1000);
       this.#cumulativeLog = [];
       this.#frozenLogs = [];
