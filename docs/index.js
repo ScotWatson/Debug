@@ -14,7 +14,7 @@ const loadWindow = new Promise(function (resolve, reject) {
 });
 
 const loadErrorLogModule = (async function () {
-  const module = await import("https://scotwatson.github.io/Debug/ErrorLog.mjs");
+  const module = await import("https://scotwatson.github.io/Debug/20221107/ErrorLog.mjs");
   console.log(Object.getOwnPropertyNames(module));
   return module;
 })();
