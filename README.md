@@ -1,3 +1,5 @@
 # Debug
 
-View the [wiki](https://github.com/ScotWatson/Debug/wiki) here.
+[Live Web Demo](https://scotwatson.github.io/Debug/)
+
+[Wiki](https://github.com/ScotWatson/Debug/wiki)
