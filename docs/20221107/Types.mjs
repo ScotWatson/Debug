@@ -3,6 +3,18 @@
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+export function createStaticFunc(thisObj, func) {
+  return (function (...args) {
+    return func.apply(thisObj, args);
+  });
+}
+
+export function createStaticAsyncFunc(thisObj, asyncFunc) {
+  return (async function (...args) {
+    return await asyncFunc.apply(thisObj, args);
+  });
+}
+
 export function isObject(arg) {
   return ((arg !== null) && (typeof arg === "object"));
 }
