@@ -69,6 +69,6 @@ export function isInteger(arg) {
   }
 }
 
-export function isArray(arg) {
-  return Array.isArray(arg);
+export function isTimestamp(arg) {
+  return (Object.prototype.toString.call(date) === "[object Date]");
 }
