@@ -28,15 +28,13 @@ function start( [ evtWindow, ErrorLog ] ) {
     btnThrowException.innerHTML = "Throw Exception";
     btnThrowException.addEventListener("click", btnThrowExceptionHandler);
     document.body.appendChild(btnThrowException);
-    const inpInput1 = document.createElement("input");
-    inpInput1.type = "text";
-    document.body.appendChild(inpInput1);
-    const inpInput2 = document.createElement("input");
-    inpInput2.type = "text";
-    document.body.appendChild(inpInput2);
+    const btnRethrowException = document.createElement("button");
+    btnRethrowException.innerHTML = "Rethrow Exception";
+    btnRethrowException.addEventListener("click", btnRethrowExceptionHandler);
+    document.body.appendChild(btnRethrowException);
   } catch (e) {
     // This is a top level function, therfore it cannot throw an exception.
-    finalCatch({
+    ErrorLog.finalCatch({
       functionName: "start",
       error: e,
     });
@@ -45,11 +43,33 @@ function start( [ evtWindow, ErrorLog ] ) {
     try {
       throw "The \"Throw Exception\" button was clicked.";
     } catch (e) {
-      rethrow({
+      // This is also a top level function, therfore it cannot throw an exception.
+      ErrorLog.finalCatch({
         functionName: "btnThrowExceptionHandler",
         error: e,
       });
-    });
+    }
+  }
+  function btnRethrowExceptionHandler(evt) {
+    try {
+      rethrowException();
+    } catch (e) {
+      // This is also a top level function, therfore it cannot throw an exception.
+      ErrorLog.finalCatch({
+        functionName: "btnThrowExceptionHandler",
+        error: e,
+      });
+    }
+  }
+  function rethrowException(evt) {
+    try {
+      throw "Rethrowing Exception...";
+    } catch (e) {
+      ErrorLog.rethrow({
+        functionName: "rethrowException",
+        error: e,
+      });
+    }
   }
 }
 
