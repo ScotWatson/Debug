@@ -49,7 +49,7 @@ function start( [ evtWindow, ErrorLog ] ) {
         functionName: "btnThrowExceptionHandler",
         error: e,
       });
-    });
+    }
   }
 }
 
