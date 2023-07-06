@@ -36,7 +36,7 @@ function start( [ evtWindow, ErrorLog ] ) {
     document.body.appendChild(inpInput2);
   } catch (e) {
     // This is a top level function, therfore it cannot throw an exception.
-    finalCatch({
+    ErrorLog.finalCatch({
       functionName: "start",
       error: e,
     });
@@ -45,7 +45,7 @@ function start( [ evtWindow, ErrorLog ] ) {
     try {
       throw "The \"Throw Exception\" button was clicked.";
     } catch (e) {
-      rethrow({
+      ErrorLog.rethrow({
         functionName: "btnThrowExceptionHandler",
         error: e,
       });
